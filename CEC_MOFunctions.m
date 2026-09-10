@@ -9,8 +9,14 @@ function f = CEC_MOFunctions(x, func_no)
 %   Output:
 %       f = [f1, f2, ... fM]
 %
-%   Author: ChatGPT (Custom for your research)
+% Count objective-function evaluations for benchmark diagnostics.
+global FE_COUNT
 
+if isempty(FE_COUNT)
+    FE_COUNT = 0;
+end
+
+FE_COUNT = FE_COUNT + 1;
     x = x(:)';         % Ensure row vector
     D = length(x);     % Dimension
 
@@ -156,10 +162,49 @@ function f = DTLZ3(x, M)
 end
 
 %% ---------------- DTLZ4 ----------------
+%% ---------------- DTLZ4 ----------------
 function f = DTLZ4(x, M)
+%DTLZ4 Standard DTLZ4 benchmark problem.
+%
+% The bias exponent alpha is applied only to the angular decision
+% variables x(1:M-1). The distance-related variables used in g
+% remain untransformed, according to the standard DTLZ4 definition.
+
     alpha = 100;
-    x = x.^alpha;
-    f = DTLZ2(x, M);
+
+    % Number of distance-related variables
+    k = length(x) - M + 1;
+
+    % Standard DTLZ4 distance function:
+    % use the ORIGINAL decision variables x(M:end)
+    g = sum((x(end-k+1:end) - 0.5).^2);
+
+    f = zeros(1, M);
+
+    for m = 1:M
+
+        f(m) = 1 + g;
+
+        % Cosine terms involving the biased angular variables
+        for i = 1:(M-m)
+
+            f(m) = f(m) * ...
+                cos((x(i)^alpha) * pi/2);
+
+        end
+
+        % Sine term
+        if m > 1
+
+            idx = M - m + 1;
+
+            f(m) = f(m) * ...
+                sin((x(idx)^alpha) * pi/2);
+
+        end
+
+    end
+
 end
 
 %% ---------------- Custom convex–concave MOP ----------------
