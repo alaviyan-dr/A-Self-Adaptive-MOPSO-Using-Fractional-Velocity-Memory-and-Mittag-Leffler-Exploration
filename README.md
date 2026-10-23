@@ -21,13 +21,13 @@ The recommended layout for the updated research release is:
 ├── Benchmark/
 │   ├── main_SA_MOPSO_FVML_benchmark_revisedv5.m
 │   ├── CEC_MOFunctions.m
-│   ├── Focused_Experiments/          # Final scripts and data for focused tests
+│   
 │   └── results/                      # Main benchmark outputs (created on execution)
 ├── Statistical_Analysis/
 │   └── Holm_Table14_from_saved_results.m
 ├── Marine_DP/
-│   ├── CostFunctionDPShip.m          # Plus all simulation dependencies
-│   ├── deadzoon.m                    # Error dead-zone function
+│   ├── CostFunctionDPShip.m         # cost function
+│   ├──RunThisCodeEngineerProblem.m    # optimize file
 │   ├── Validate_DP_Settling_Robust_800s.m
 │   └── results/
 │       └── SAMOPSO_FVML_Results.mat  # Original saved Pareto archive, if distributed
@@ -128,7 +128,6 @@ The engineering study uses SA-MOPSO-FVML for **offline** optimization of a fixed
 
 ### Error dead zone
 
-The implemented `deadzoon.m` function zeroes **tracking-error components** whose magnitudes are strictly below the specified channel thresholds:
 
 | Channel | Error dead-zone threshold |
 |---|---|
